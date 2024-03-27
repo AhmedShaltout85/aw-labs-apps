@@ -1,0 +1,154 @@
+jdbc:jtds:sqlserver://192.168.0.212:1433/awco_labs
+The com.microsoft.sqlserver package on Maven now only has version 6.0 as the lowest version JDBC.
+ So you need try another groupId Maven which has JDBC version 4.0.
+
+I recommend this; it works for me. I'm using SQL Server 2012 and Java 8.
+<dependency>
+    <groupId>net.sourceforge.jtds</groupId>
+    <artifactId>jtds</artifactId>
+    <version>1.3.1</version>
+</dependency>
+
+And a config properties file like:
+
+jdbc.driverClassName = net.sourceforge.jtds.jdbc.Driver
+jdbc.url = jdbc:jtds:sqlserver://localhost:1433;databasename=YourDB;encrypt=true;trustserverCertificate=true
+
+###
+#error with Entitymanager :
+			mean there are an error in entity like no id as primary key in table in my case
+#ssl: this appear with jdk version later on version 8
+How do I re-enable TLS1.0 and TLS1.1 in JDK distributions other than Corretto?
+The good news is that re-enabling these versions is straightforward. 
+First, locate your java.security configuration file located in the jre/lib/security folder for OpenJDK 8 or conf/security for OpenJDK 11 and higher. 
+If you are unfamiliar with this file, you can take a look at the current version in Corretto 11 on GitHub. From here are two options.
+
+Option 1 (preferred): First, ensure the security.overridePropertiesFile value in the java.security file is set to true (this is usually the default value). 
+Then, take the following steps:
+
+Create a file named enableLegacyTLS.security.
+In that file, add an entry for jdk.tls.disabledAlgorithms with the same contents as the jdk.tls.disabledAlgorithms property in the java.security file.
+Remove TLSv1 and/or TLSv1.1 from the list on the enableLegacyTLS.security. (You can see this line in the Corretto GitHub).
+Start your application with -Djava.security.properties=path/to/enableLegacyTLS.security.
+Alternatively, you can edit this value in the java.security file directly. Search for the property jdk.tls.disabledAlgorithms. 
+For OpenJDK 11, its contents will be similar to:
+
+jdk.tls.disabledAlgorithms=SSLv3, TLSv1, TLSv1.1, RC4, DES, MD5withRSA, \
+ DH keySize < 1024, EC keySize < 224, 3DES_EDE_CBC, anon, NULL, \
+ include jdk.disabled.namedCurves
+By removing the TLSv1.1 and/or TLSv1 entries (in bold above), you can re-establish those versions back to the list of usable versions within the JDK.
+
+To make your Corretto configuration more restrictive, perform similar steps adding “TLSv1, TLSv1.1″ to the jdk.tls.disabledAlgorithms property
+
+
+STEPS:
+1- ahmedshaltout@devPC:~/.jdks/openjdk-19.0.1/conf/security$ ll
+drwxrwxr-x 3 ahmedshaltout ahmedshaltout  4096 Oct 24  2022 ./
+drwxrwxr-x 5 ahmedshaltout ahmedshaltout  4096 Oct 24  2022 ../
+-rw-r--r-- 1 ahmedshaltout ahmedshaltout  2294 Oct 24  2022 java.policy
+-rw-r--r-- 1 ahmedshaltout ahmedshaltout 59584 Oct 24  2022 java.security
+drwxrwxr-x 4 ahmedshaltout ahmedshaltout  4096 Oct 24  2022 policy/
+
+ahmedshaltout@devPC:~/.jdks/openjdk-19.0.1/conf/security$ sudo gedit java.security
+
+ahmedshaltout@devPC:~/.jdks/openjdk-19.0.1/conf/security$ touch enableLegacyTLS.security
+ahmedshaltout@devPC:~/.jdks/openjdk-19.0.1/conf/security$ sudo gedit enableLegacyTLS.security 
+jdk.tls.disabledAlgorithms=SSLv3, RC4, DES, MD5withRSA, \
+    DH keySize < 1024, EC keySize < 224, 3DES_EDE_CBC, anon, NULL
+
+ahmedshaltout@devPC:~/.jdks/openjdk-19.0.1/conf/security$ ll
+total 80
+drwxrwxr-x 3 ahmedshaltout ahmedshaltout  4096 Mar 20 10:02 ./
+drwxrwxr-x 5 ahmedshaltout ahmedshaltout  4096 Oct 24  2022 ../
+-rw-rw-r-- 1 ahmedshaltout ahmedshaltout   124 Mar 20 10:02 enableLegacyTLS.security
+-rw-r--r-- 1 ahmedshaltout ahmedshaltout  2294 Oct 24  2022 java.policy
+-rw-r--r-- 1 ahmedshaltout ahmedshaltout 59584 Oct 24  2022 java.security
+drwxrwxr-x 4 ahmedshaltout ahmedshaltout  4096 Oct 24  2022 policy/
+
+
+change 
+~/.jdks/openjdk-19.0.1/conf/security/enableLegacyTLS.security (starting path) edited in java.security
+
+-Djava.security.properties=~/.jdks/openjdk-19.0.1/conf/security/enableLegacyTLS.security
+
+or remove from java.security TLS1.0 and TLS1.1 ssl3
+
+then use in app path
+mvn install:install-file -Dfile=sqljdbc4-3.0.jar -DgroupId=com.microsoft.sqlserver -DartifactId=sqljdbc4 -Dversion=4.0 -Dpackaging=jar
+
+
+error message in sql server Login failed for user 'NT AUTHORITY\SYSTEM'. Reason: Failed to open the explicitly specified database. [CLIENT: <local machine>]
+ChatGPT
+The error message "Login failed for user 'NT AUTHORITY\SYSTEM'. Reason: Failed to open the explicitly specified database." indicates that the SQL Server login attempt made by the NT AUTHORITY\SYSTEM user failed because it couldn't open the specified database.
+
+Here are a few steps to troubleshoot and potentially resolve this issue:
+
+Check SQL Server Login Credentials: Ensure that the NT AUTHORITY\SYSTEM user has appropriate permissions to access the specified database. You might need to check the security settings and roles assigned to this user in SQL Server Management Studio (SSMS).
+
+Verify Database Existence: Double-check that the specified database exists on the SQL Server instance. If the database doesn't exist or if its name is misspelled, you'll encounter this error.
+
+Check Database Permissions: Make sure that the NT AUTHORITY\SYSTEM user has sufficient permissions on the specified database. In SSMS, you can check the user's permissions by navigating to the Security section of the database, right-clicking the user, and selecting Properties.
+
+Authentication Mode: Ensure that SQL Server authentication is enabled and configured properly if you're using SQL Server authentication for NT AUTHORITY\SYSTEM user login. If you're using Windows Authentication, ensure that the user is correctly authenticated by the Windows domain.
+
+Check SQL Server Logs: Inspect the SQL Server error logs for more detailed error messages. The error logs might provide additional information about why the login attempt failed.
+
+Network Configuration: If you're accessing SQL Server from a remote machine, verify that remote connections are enabled on the SQL Server instance and that there are no firewall or network configuration issues preventing access.
+
+Try Different Authentication: If possible, try connecting to SQL Server using a different user account to see if the issue is specific to the NT AUTHORITY\SYSTEM user or a more general problem with SQL Server authentication or database access.
+
+Restart SQL Server Service: Sometimes, restarting the SQL Server service can resolve temporary connectivity issues. However, this should be done cautiously, especially in a production environment.
+
+By following these steps and investigating further based on the specific details of your SQL Server environment, you should be able to identify and resolve the login failure issue for the NT AUTHORITY\SYSTEM user.
+
+###
+url:
+get:ALL
+
+http://localhost:8888/awco/api/v1/break-info
+
+get:BY-LAB-code
+
+http://localhost:8888/awco/api/v1/break-info/l/10
+
+get:BY-BREAK-id
+http://localhost:8888/awco/api/v1/break-info/b/0
+
+get:BY-BREAK-id_LAB-code
+http://localhost:8888/awco/api/v1/break-info/bl/0/9
+
+
+
+to deploy war :->(MUST)
+1-setup jdk in host server with the same version of war package number
+
+ $ update-alternatives --list java
+/usr/bin/gij-5
+/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+to find java.security file to remove ssl
+
+
+@SpringBootApplication
+public class AwLabsAppApplication extends SpringServletContainerInitializer {
+
+
+	public static void main(String[] args) {
+
+		SpringApplication.run(AwLabsAppApplication.class, args);
+	}
+
+}
+
+2-install mvn combatable with jdk version
+
+3- run:
+mv to app folder:
+
+mvn clean
+mvn install 
+mvn spring-boot:run (act like tomcat deploy)
+or 
+java -jar app.jar || app.war (act like tomcat deploy)
+
+4- must define "/app-name" as context-path in app.properties file. 
+
