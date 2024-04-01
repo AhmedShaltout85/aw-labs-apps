@@ -39,8 +39,8 @@ public class TrackingPointServiceImpl implements ITrackingPointService {
     @Override
     public ResponseEntity<TrackingPointDto> findById(Long id) {
         Optional<TrackingPointEntity> trackingPointEntity = this.iTrackingPointRepository.findById(id);
-        if (trackingPointEntity==null) {
-            throw new RecordNotFoundException("the item with id: " + id + " not found!....");
+        if (trackingPointEntity.isEmpty()) {
+            throw new RecordNotFoundException("The Break with ID: " + id + " not found!....");
         }
         TrackingPointDto trackingPointDto = TRACKING_POINT_MAPPER.trackingPointEntityTotrackingPointDto(trackingPointEntity.get());
         return new ResponseEntity<>(trackingPointDto, HttpStatus.OK);
@@ -82,7 +82,7 @@ public class TrackingPointServiceImpl implements ITrackingPointService {
                 .map(TRACKING_POINT_MAPPER::trackingPointEntityTotrackingPointDto)
                 .collect(Collectors.toList());
         if (trackingPointDtoList.isEmpty()) {
-            throw new RecordNotFoundException("Sorry, The Break with LAB-CODE and Lab_code : " + labCode +" not found!...");
+            throw new RecordNotFoundException("Sorry, The Break with LAB-CODE: " + labCode +" not found!...");
         }
         return new ResponseEntity<>(trackingPointDtoList, HttpStatus.OK);
     }
