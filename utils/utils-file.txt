@@ -152,3 +152,14 @@ java -jar app.jar || app.war (act like tomcat deploy)
 
 4- must define "/app-name" as context-path in app.properties file. 
 
+change spring boot version in pom.xml to 3.1.5 with jdk 17
+copy war from terminal and tomcat stop with permission
+like this in linux:
+
+ahmedshaltout@devPC:~/Desktop/apache-tomcat-10.1.19/webapps$ sudo cp /home/ahmedshaltout/Desktop/RESTFulAPIApps/aw-labs-apps/target/aw-labs-apps.war .
+ahmedshaltout@devPC:~/Desktop/apache-tomcat-10.1.19/webapps$ chmod +x aw-labs-apps.war
+chmod: changing permissions of 'aw-labs-apps.war': Operation not permitted
+ahmedshaltout@devPC:~/Desktop/apache-tomcat-10.1.19/webapps$ sudo !!
+sudo chmod +x aw-labs-apps.war
+ahmedshaltout@devPC:~/Desktop/apache-tomcat-10.1.19/webapps$ sudo chmod +xrw aw-labs-apps.war
+ahmedshaltout@devPC:~/Desktop/apache-tomcat-10.1.19/webapps$
