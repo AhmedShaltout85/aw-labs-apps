@@ -129,7 +129,7 @@ to find java.security file to remove ssl
 
 
 @SpringBootApplication
-public class AwLabsAppApplication extends SpringServletContainerInitializer {
+public class AwLabsAppApplication extends SpringBootServletInitializer {
 
 
 	public static void main(String[] args) {
@@ -137,9 +137,18 @@ public class AwLabsAppApplication extends SpringServletContainerInitializer {
 		SpringApplication.run(AwLabsAppApplication.class, args);
 	}
 
-}
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+		return super.configure(builder);
+	}
 
-2-install mvn combatable with jdk version
+-----
+or create project in initilizer with war package
+and run it :
+mvn spring-boot:run for testing
+
+
+2-install mvn compatible with jdk version
 
 3- run:
 mv to app folder:
