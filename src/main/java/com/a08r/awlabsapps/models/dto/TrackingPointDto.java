@@ -29,3 +29,12 @@ public class TrackingPointDto {
 //        this.trackingPointEntity = trackingPointEntity;
 //    }
 //}
+
+//public record TrackingPointDto(String sectorName,
+//                               String labName,
+//                               int labCode,
+//                               int breakId,
+//                               String breakDate,
+//                               String breakTime,
+//                               double locationX,
+//                               double locationY){}
