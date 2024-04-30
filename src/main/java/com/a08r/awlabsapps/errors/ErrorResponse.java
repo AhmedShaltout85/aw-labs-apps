@@ -16,3 +16,9 @@ public class ErrorResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss",timezone = MY_TIME_ZONE)
     private Date timestamp;
 }
+
+
+//public record ErrorResponse(String code,
+//                            String message,
+//                            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss",timezone = "Africa/Cairo")
+//                            Date timestamp){}
