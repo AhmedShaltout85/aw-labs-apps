@@ -6,6 +6,10 @@ import com.a08r.awlabsapps.models.trackpointentity.TrackingPointEntity;
 public class TrackingPointMapperImp implements ITrackingPointMapper{
     @Override
     public TrackingPointEntity trackingPointDtoToTrackingPointEntity(TrackingPointDto trackingPointDto) {
+        //updated for unit testing (shouldThrowNotNullExceptionWhenLabsDTOisNull-- method)
+        if(trackingPointDto == null){
+            throw new NullPointerException("trackingPointDto should not be null");
+        }
         TrackingPointEntity trackingPointEntity = new TrackingPointEntity();
         trackingPointEntity.setSectorName(trackingPointDto.getSectorName());
         trackingPointEntity.setLabName(trackingPointDto.getLabName());
