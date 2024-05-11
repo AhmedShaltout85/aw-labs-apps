@@ -26,33 +26,7 @@ class ITrackingPointRepositoryTest {
     @Test
     void shouldFindByBreakIdAndLabCodeTest() {
         //Given
-        TrackingPointEntity trackingPointEntity1 = new TrackingPointEntity(
-                1L,
-                "sectorName",
-                "labName",
-                1,
-                1,
-                1,
-                "breakDate",
-                "breakTime",
-                1.0,
-                1.0
-        );
-        TrackingPointEntity trackingPointEntity2 = new TrackingPointEntity(
-                2L,
-                "sectorName",
-                "labName",
-                1,
-                1,
-                1,
-                "breakDate",
-                "breakTime",
-                1.0,
-                1.0
-        );
-        List<TrackingPointEntity> trackingPointEntityList = List.of(trackingPointEntity1, trackingPointEntity2);
-        iTrackingPointRepository.save(trackingPointEntity1);
-        iTrackingPointRepository.save(trackingPointEntity2);
+        extractedMethodForTrackingPointEntityList();
 
         //When
         List<TrackingPointEntity> expected = iTrackingPointRepository.findByBreakIdAndLabCode(1, 1);
@@ -64,33 +38,7 @@ class ITrackingPointRepositoryTest {
     @Test
     void shouldFindByBreakIdTest() {
         //Given
-        TrackingPointEntity trackingPointEntity1 = new TrackingPointEntity(
-                1L,
-                "sectorName",
-                "labName",
-                1,
-                1,
-                1,
-                "breakDate",
-                "breakTime",
-                1.0,
-                1.0
-        );
-        TrackingPointEntity trackingPointEntity2 = new TrackingPointEntity(
-                2L,
-                "sectorName",
-                "labName",
-                1,
-                1,
-                1,
-                "breakDate",
-                "breakTime",
-                1.0,
-                1.0
-        );
-        List<TrackingPointEntity> trackingPointEntityList = List.of(trackingPointEntity1, trackingPointEntity2);
-        iTrackingPointRepository.save(trackingPointEntity1);
-        iTrackingPointRepository.save(trackingPointEntity2);
+        extractedMethodForTrackingPointEntityList();
 
         //When
         List<TrackingPointEntity> expected = iTrackingPointRepository.findByBreakId(1);
@@ -101,6 +49,17 @@ class ITrackingPointRepositoryTest {
     @Test
     void shouldFindByLabCodeTest() {
         //Given
+        extractedMethodForTrackingPointEntityList();
+
+        //When
+        List<TrackingPointEntity> expected = iTrackingPointRepository.findByLabCode(1);
+        //Then
+        assertEquals(iTrackingPointRepository.findByLabCode(1), expected);
+    }
+
+    //Refactoring Method for repository layer unit testing - Instance TrackingPointEntity
+
+    private void extractedMethodForTrackingPointEntityList() {
         TrackingPointEntity trackingPointEntity1 = new TrackingPointEntity(
                 1L,
                 "sectorName",
@@ -128,10 +87,5 @@ class ITrackingPointRepositoryTest {
         List<TrackingPointEntity> trackingPointEntityList = List.of(trackingPointEntity1, trackingPointEntity2);
         iTrackingPointRepository.save(trackingPointEntity1);
         iTrackingPointRepository.save(trackingPointEntity2);
-
-        //When
-        List<TrackingPointEntity> expected = iTrackingPointRepository.findByLabCode(1);
-        //Then
-        assertEquals(iTrackingPointRepository.findByLabCode(1), expected);
     }
 }

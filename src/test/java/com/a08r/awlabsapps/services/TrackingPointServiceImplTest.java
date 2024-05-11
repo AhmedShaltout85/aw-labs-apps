@@ -5,7 +5,6 @@ import com.a08r.awlabsapps.models.mapper.ITrackingPointMapper;
 import com.a08r.awlabsapps.models.trackpointentity.TrackingPointEntity;
 import com.a08r.awlabsapps.repositores.ITrackingPointRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -35,34 +34,10 @@ class TrackingPointServiceImplTest {
     @Test
    public void shouldFindAllTest() {
         //Given
-        List<TrackingPointEntity> trackingPointEntityList = new ArrayList<>();
-        TrackingPointEntity trackingPointEntity = new TrackingPointEntity(
-                1L,
-                "sectorName",
-                "labName",
-                1,
-                1,
-                1,
-                "breakDate",
-                "breakTime",
-                1.0,
-                1.0
-        );
-        trackingPointEntityList.add(trackingPointEntity);
+        List<TrackingPointEntity> trackingPointEntityList = getTrackingPointEntities();
         //Mock the calls
         when(iTrackingPointRepository.findAll()).thenReturn(trackingPointEntityList);
-        when(TRACKING_POINT_MAPPER.trackingPointEntityTotrackingPointDto(Mockito.any(TrackingPointEntity.class)))
-                .thenReturn(new TrackingPointDto(
-                        "sectorName",
-                        "labName",
-                        1,
-                        1,
-                        1,
-                        "breakDate",
-                        "breakTime",
-                        1.0,
-                        1.0
-                ));
+        mockTheCallDtoMethod();
         //When
         List<TrackingPointDto> trackingPointDtoList = trackingPointServiceImpl.findAll().getBody();
 
@@ -76,31 +51,10 @@ class TrackingPointServiceImplTest {
 
    public void shouldFindByIdTest() {
         //Given
-        TrackingPointEntity trackingPointEntity = new TrackingPointEntity(
-                1L,
-                "sectorName",
-                "labName",
-                1,
-                1,
-                1,
-                "breakDate",
-                "breakTime",
-                1.0,
-                1.0
-        );
+        TrackingPointEntity trackingPointEntity = TrackingPointEntityInstance();
         //Mock the calls
         when(iTrackingPointRepository.findById(1L)).thenReturn(java.util.Optional.of(trackingPointEntity));
-        when(TRACKING_POINT_MAPPER.trackingPointEntityTotrackingPointDto(Mockito.any(TrackingPointEntity.class)))
-                .thenReturn(new TrackingPointDto(
-                        "sectorName",
-                        "labName",
-                        1,
-                        1,
-                        1,
-                        "breakDate",
-                        "breakTime",
-                        1.0,
-                        1.0 ));
+        mockTheCallDtoMethod();
         //When
         TrackingPointDto trackingPointDto = trackingPointServiceImpl.findById(1L).getBody();
         //Then
@@ -113,34 +67,10 @@ class TrackingPointServiceImplTest {
     @Test
    public void shouldFindByBreakIdTest() {
         //Given
-        List<TrackingPointEntity> trackingPointEntityList = new ArrayList<>();
-        TrackingPointEntity trackingPointEntity = new TrackingPointEntity(
-                1L,
-                "sectorName",
-                "labName",
-                1,
-                1,
-                1,
-                "breakDate",
-                "breakTime",
-                1.0,
-                1.0
-        );
-        trackingPointEntityList.add(trackingPointEntity);
+        List<TrackingPointEntity> trackingPointEntityList = getTrackingPointEntities();
         //Mock the calls
         when(iTrackingPointRepository.findByBreakId(1)).thenReturn(trackingPointEntityList);
-        when(TRACKING_POINT_MAPPER.trackingPointEntityTotrackingPointDto(Mockito.any(TrackingPointEntity.class)))
-                .thenReturn(new TrackingPointDto(
-                        "sectorName",
-                        "labName",
-                        1,
-                        1,
-                        1,
-                        "breakDate",
-                        "breakTime",
-                        1.0,
-                        1.0
-                ));
+        mockTheCallDtoMethod();
         //When
         List<TrackingPointDto> trackingPointDtoList = trackingPointServiceImpl.findByBreakId(1).getBody();
         //Then
@@ -153,34 +83,10 @@ class TrackingPointServiceImplTest {
     @Test
    public void shouldFindByBreakIdAndLabCodeTest() {
         //Given
-        List<TrackingPointEntity> trackingPointEntityList = new ArrayList<>();
-        TrackingPointEntity trackingPointEntity = new TrackingPointEntity(
-                1L,
-                "sectorName",
-                "labName",
-                1,
-                1,
-                1,
-                "breakDate",
-                "breakTime",
-                1.0,
-                1.0
-        );
-        trackingPointEntityList.add(trackingPointEntity);
+        List<TrackingPointEntity> trackingPointEntityList = getTrackingPointEntities();
         //Mock the calls
         when(iTrackingPointRepository.findByBreakIdAndLabCode(1,1)).thenReturn(trackingPointEntityList);
-        when(TRACKING_POINT_MAPPER.trackingPointEntityTotrackingPointDto(Mockito.any(TrackingPointEntity.class)))
-                .thenReturn(new TrackingPointDto(
-                        "sectorName",
-                        "labName",
-                        1,
-                        1,
-                        1,
-                        "breakDate",
-                        "breakTime",
-                        1.0,
-                        1.0
-                ));
+        mockTheCallDtoMethod();
         //When
         List<TrackingPointDto> trackingPointDtoList = trackingPointServiceImpl.findByBreakIdAndLabCode(1,1).getBody();
         //Then
@@ -192,22 +98,32 @@ class TrackingPointServiceImplTest {
     @Test
    public void shouldFindByLabCodeTest() {
         //Given
-        List<TrackingPointEntity> trackingPointEntityList = new ArrayList<>();
-        TrackingPointEntity trackingPointEntity = new TrackingPointEntity(
-                1L,
-                "sectorName",
-                "labName",
-                1,
-                1,
-                1,
-                "breakDate",
-                "breakTime",
-                1.0,
-                1.0
-        );
-        trackingPointEntityList.add(trackingPointEntity);
+        List<TrackingPointEntity> trackingPointEntityList = getTrackingPointEntities();
         //Mock the calls
         when(iTrackingPointRepository.findByLabCode(1)).thenReturn(trackingPointEntityList);
+        mockTheCallDtoMethod();
+        //When
+        List<TrackingPointDto> trackingPointDtoList = trackingPointServiceImpl.findByLabCode(1).getBody();
+        //Then
+        assert trackingPointDtoList != null;
+        assertEquals(trackingPointDtoList.size(), trackingPointEntityList.size());
+        verify(iTrackingPointRepository, times(1)).findByLabCode(1);
+
+    }
+
+
+//Refactoring Method for service layer unit testing
+
+    private static List<TrackingPointEntity> getTrackingPointEntities() {
+        List<TrackingPointEntity> trackingPointEntityList = new ArrayList<>();
+        TrackingPointEntity trackingPointEntity = TrackingPointEntityInstance();
+        trackingPointEntityList.add(trackingPointEntity);
+        return trackingPointEntityList;
+    }
+
+    //Refactoring Method for service layer unit testing - Mock the calls
+
+    private void mockTheCallDtoMethod() {
         when(TRACKING_POINT_MAPPER.trackingPointEntityTotrackingPointDto(Mockito.any(TrackingPointEntity.class)))
                 .thenReturn(new TrackingPointDto(
                         "sectorName",
@@ -220,14 +136,22 @@ class TrackingPointServiceImplTest {
                         1.0,
                         1.0
                 ));
-        //When
-        List<TrackingPointDto> trackingPointDtoList = trackingPointServiceImpl.findByLabCode(1).getBody();
-        //Then
-        assert trackingPointDtoList != null;
-        assertEquals(trackingPointDtoList.size(), trackingPointEntityList.size());
-        verify(iTrackingPointRepository, times(1)).findByLabCode(1);
-
     }
 
-
+    //Refactoring Method for service layer unit testing - Instance TrackingPointEntity
+    private static TrackingPointEntity TrackingPointEntityInstance() {
+        TrackingPointEntity trackingPointEntity = new TrackingPointEntity(
+                1L,
+                "sectorName",
+                "labName",
+                1,
+                1,
+                1,
+                "breakDate",
+                "breakTime",
+                1.0,
+                1.0
+        );
+        return trackingPointEntity;
+    }
 }

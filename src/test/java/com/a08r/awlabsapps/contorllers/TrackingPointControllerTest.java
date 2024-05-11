@@ -36,33 +36,9 @@ class TrackingPointControllerTest {
     @Test
     public void shouldGetAllTest() throws Exception {
         //Given
-        TrackingPointDto trackingPointDto1 = new TrackingPointDto(
-                "sectorName",
-                "labName",
-                1,
-                1,
-                1,
-                "breakDate",
-                "breakTime",
-                1.0,
-                1.0
-        );
-        TrackingPointDto trackingPointDto2 = new TrackingPointDto(
-                "sectorName1",
-                "labName1",
-                2,
-                1,
-                1,
-                "breakDate1",
-                "breakTime1",
-                11.0,
-                11.0
-
-        );
-
-        List<TrackingPointDto> data = Arrays.asList(trackingPointDto1, trackingPointDto2);
+        final Result result = getResult();
         //When
-        given(iTrackingPointService.findAll()).willReturn(ResponseEntity.ok().body(data));
+        given(iTrackingPointService.findAll()).willReturn(ResponseEntity.ok().body(result.data()));
         //Then
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/break-info")
@@ -70,39 +46,17 @@ class TrackingPointControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].sectorName", equalTo(trackingPointDto1.getSectorName())));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].sectorName", equalTo(result.trackingPointDto1().getSectorName())));
     }
 
+    private record Result(TrackingPointDto trackingPointDto1, List<TrackingPointDto> data) {
+
+    }
     @Test
     public void shouldFindByBreakIdTest() throws Exception {
         //Given
-        TrackingPointDto trackingPointDto1 = new TrackingPointDto(
-                "sectorName",
-                "labName",
-                1,
-                1,
-                1,
-                "breakDate",
-                "breakTime",
-                1.0,
-                1.0
-        );
-        TrackingPointDto trackingPointDto2 = new TrackingPointDto(
-                "sectorName1",
-                "labName1",
-                2,
-                1,
-                1,
-                "breakDate1",
-                "breakTime1",
-                11.0,
-                11.0
-
-        );
-
-        List<TrackingPointDto> data = Arrays.asList(trackingPointDto1, trackingPointDto2);
-        //When
-        given(iTrackingPointService.findByBreakId(1)).willReturn(ResponseEntity.ok().body(data));
+        final Result result = getResult();
+        given(iTrackingPointService.findByBreakId(1)).willReturn(ResponseEntity.ok().body(result.data()));
         //Then
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/break-info/{id}", 1)
@@ -114,31 +68,9 @@ class TrackingPointControllerTest {
     @Test
     public void shouldFindByBreakIdAndLabCodeTest() throws Exception {
         //Given
-        TrackingPointDto trackingPointDto1 = new TrackingPointDto(
-                "sectorName",
-                "labName",
-                1,
-                1,
-                1,
-                "breakDate",
-                "breakTime",
-                1.0,
-                1.0
-        );
-        TrackingPointDto trackingPointDto2 = new TrackingPointDto(
-                "sectorName1",
-                "labName1",
-                2,
-                1,
-                1,
-                "breakDate1",
-                "breakTime1",
-                11.0,
-                11.0
-        );
-        List<TrackingPointDto> data = Arrays.asList(trackingPointDto1, trackingPointDto2);
-        //When
-        given(iTrackingPointService.findByBreakIdAndLabCode(1, 1)).willReturn(ResponseEntity.ok().body(data));
+        final Result result = getResult();
+
+        given(iTrackingPointService.findByBreakIdAndLabCode(1, 1)).willReturn(ResponseEntity.ok().body(result.data()));
         //Then
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/v1/break-info/{id}/{labCode}", 1, 1)
@@ -151,31 +83,9 @@ class TrackingPointControllerTest {
     @Test
     public void shouldTestFindByBreakIdTest() throws Exception {
         //Given
-        TrackingPointDto trackingPointDto1 = new TrackingPointDto(
-                "sectorName",
-                "labName",
-                1,
-                1,
-                1,
-                "breakDate",
-                "breakTime",
-                1.0,
-                1.0
-        );
-        TrackingPointDto trackingPointDto2 = new TrackingPointDto(
-                "sectorName1",
-                "labName1",
-                2,
-                1,
-                1,
-                "breakDate1",
-                "breakTime1",
-                11.0,
-                11.0
-        );
-        List<TrackingPointDto> data = Arrays.asList(trackingPointDto1, trackingPointDto2);
-        //When
-        given(iTrackingPointService.findByBreakId(1)).willReturn(ResponseEntity.ok().body(data));
+        final Result result = getResult();
+
+        given(iTrackingPointService.findByBreakId(1)).willReturn(ResponseEntity.ok().body(result.data()));
         //Then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/break-info/{id}", 1).accept("application/json")
                         .accept("application/json"))
@@ -188,6 +98,17 @@ class TrackingPointControllerTest {
     @Test
     public void shouldFindByLabCodeTest() throws Exception {
         //Given
+        final Result result = getResult();
+
+        given(iTrackingPointService.findByLabCode(1)).willReturn(ResponseEntity.ok().body(result.data()));
+        //Then
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/api/v1/labs/{labCode}", 1).accept("application/json")
+        );
+
+    }
+
+    private static Result getResult() {
         TrackingPointDto trackingPointDto1 = new TrackingPointDto(
                 "sectorName",
                 "labName",
@@ -209,14 +130,11 @@ class TrackingPointControllerTest {
                 "breakTime1",
                 11.0,
                 11.0
-        );
-        List<TrackingPointDto> data = Arrays.asList(trackingPointDto1, trackingPointDto2);
-        //When
-        given(iTrackingPointService.findByLabCode(1)).willReturn(ResponseEntity.ok().body(data));
-        //Then
-        mockMvc.perform(MockMvcRequestBuilders
-                .get("/api/v1/labs/{labCode}", 1).accept("application/json")
+
         );
 
+        List<TrackingPointDto> data = Arrays.asList(trackingPointDto1, trackingPointDto2);
+        Result result = new Result(trackingPointDto1, data);
+        return result;
     }
 }
