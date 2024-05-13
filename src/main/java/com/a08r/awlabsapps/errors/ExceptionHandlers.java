@@ -21,4 +21,14 @@ public class ExceptionHandlers extends ResponseEntityExceptionHandler {
                 recordNotFoundException.getMessage(), new Date());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
+    //handle other exceptions
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public final ResponseEntity<ErrorResponse> handleOtherException
+            (final Exception generalException){
+        ErrorResponse errorResponse = new ErrorResponse("400",
+                generalException.getMessage(), new Date());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }
